@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
-
+#include <initializer_list>
 
 
 class Matrix {
@@ -25,10 +25,22 @@ public:
     {
 
     }
-    //construct with rows and cols
+    //construct with rows and cols (i have to remove this)
     Matrix (int rows, int cols) {
         setMatrix(rows, cols);
     }
+
+    //constructs using initializer list format now
+    Matrix(std::initializer_list<std::initializer_list<double>> listConstruct) {
+        for (std::initializer_list row : listConstruct) {
+            std::vector<double> tempVect {};
+            for (double x : row) {
+                tempVect.push_back(x);
+            }
+            m_matrix.push_back(tempVect);
+        }
+    }
+
     //construct with 2d array
     Matrix (const std::vector<std::vector<double>>& vect)
         :m_matrix (vect)
@@ -46,6 +58,7 @@ public:
             std::cout << "Enter row " << i << ": ";
 
             //get the entire line, feeds into stringstream to convert inputs into doubles and pushes into row
+            //REMEMBER******** need to change this into a kind of resizing function instead of only being called for constructor.******
             std::string line;
             std::getline(std::cin, line);
             std::stringstream ss(line);
@@ -60,9 +73,10 @@ public:
     }
 
 
-
+    //member funcs
     void printMatrix() const;
     Matrix addMatrix(const Matrix&) const;
     Matrix subtractMatrix(const Matrix& matrix2) const;
     Matrix multiplyMatrix(const Matrix& matrix2) const;
+    Matrix transposeMatrix() const;
 };

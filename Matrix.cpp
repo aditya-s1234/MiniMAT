@@ -6,6 +6,8 @@
 
 // matrix printing and arithmetic operations here
 
+//SELF NOTE: REMEMBER TO ADD ERROR CHECKING TO EVERYTHING
+
 void Matrix::printMatrix() const{
     for (const auto& i : m_matrix) {
         for (const auto& j : i) {
@@ -61,6 +63,18 @@ void Matrix::printMatrix() const{
             newMatrix.push_back(tempVect);
 
         }
+    }
+    return newMatrix;
+}
+
+Matrix Matrix::transposeMatrix() const {
+    std::vector<std::vector<double>> newMatrix{};
+    for (std::ptrdiff_t j{}; j < std::ssize(m_matrix[0]); ++j) {
+        std::vector<double> tempVect{};
+        for (std::ptrdiff_t i{}; i < std::ssize(m_matrix); ++i) {
+            tempVect.push_back(m_matrix[i][j]);
+        }
+        newMatrix.push_back(tempVect);
     }
     return newMatrix;
 }

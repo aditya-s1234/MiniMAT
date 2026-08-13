@@ -2,10 +2,10 @@
 #include "Matrix.h"
 
 int main () {
-    Matrix x{2,3};
-    Matrix y{3,2};
+    Matrix x{{1,2,3}, {4,5,6}};
 
-    Matrix z (x.multiplyMatrix(y));
-    z.printMatrix();
+    x.transposeMatrix().printMatrix();
+
+
     return 0;
 }
