@@ -8,9 +8,7 @@
 #include <string>
 #include <sstream>
 
-std::istream& operator>> (std::istream& in, std::vector<double>& arr) {
 
-}
 
 class Matrix {
 private:
@@ -23,13 +21,24 @@ public:
 
 
     Matrix ()
-        :Matrix(int {0}, int {0})
+        :Matrix(0, 0)
     {
 
     }
-
+    //construct with rows and cols
     Matrix (int rows, int cols) {
         setMatrix(rows, cols);
+    }
+    //construct with 2d array
+    Matrix (const std::vector<std::vector<double>>& vect)
+        :m_matrix (vect)
+    {
+    }
+
+    //construct with Matrix
+    Matrix (const Matrix& matrix)
+        :m_matrix(matrix.m_matrix)
+    {
     }
 
     void setMatrix(int numRows, int numCols) {
@@ -52,5 +61,8 @@ public:
 
 
 
+    void printMatrix() const;
+    const Matrix addMatrix(const Matrix&) const;
+    const Matrix subtractMatrix(const Matrix& matrix2) const;
 
 };
