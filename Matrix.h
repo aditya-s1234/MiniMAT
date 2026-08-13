@@ -62,7 +62,7 @@ public:
 
 
     void printMatrix() const;
-    const Matrix addMatrix(const Matrix&) const;
-    const Matrix subtractMatrix(const Matrix& matrix2) const;
-
+    Matrix addMatrix(const Matrix&) const;
+    Matrix subtractMatrix(const Matrix& matrix2) const;
+    Matrix multiplyMatrix(const Matrix& matrix2) const;
 };

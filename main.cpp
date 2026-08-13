@@ -2,13 +2,10 @@
 #include "Matrix.h"
 
 int main () {
-    Matrix x{3,2};
+    Matrix x{2,3};
     Matrix y{3,2};
 
-    Matrix z{x.addMatrix(y)};
+    Matrix z (x.multiplyMatrix(y));
     z.printMatrix();
-
-    z.subtractMatrix(x).printMatrix();
-
     return 0;
 }
