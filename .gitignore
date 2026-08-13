@@ -1,0 +1,14 @@
+# CLion and JetBrains IDE files
+.idea/
+cmake-build-*/
+
+# Build output and compiled binaries
+build/
+bin/
+*.out
+*.o
+*.obj
+
+# OS generated files
+.DS_Store
+Thumbs.db
