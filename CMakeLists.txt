@@ -3,4 +3,6 @@ project(MiniMAT)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(MiniMAT main.cpp)
+add_executable(MiniMAT main.cpp
+        Matrix.cpp
+        Matrix.h)
