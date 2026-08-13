@@ -79,4 +79,5 @@ public:
     Matrix subtractMatrix(const Matrix& matrix2) const;
     Matrix multiplyMatrix(const Matrix& matrix2) const;
     Matrix transposeMatrix() const;
+    Matrix multiplyScalar(double scalar) const;
 };

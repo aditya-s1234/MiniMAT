@@ -79,3 +79,14 @@ Matrix Matrix::transposeMatrix() const {
     return newMatrix;
 }
 
+Matrix Matrix::multiplyScalar(double scalar) const {
+    std::vector<std::vector<double>> newMatrix{};
+    for (std::ptrdiff_t i{}; i < std::ssize(m_matrix); ++i) {
+        std::vector<double> tempVect{};
+        for (std::ptrdiff_t j{}; j < std::ssize(m_matrix[0]); ++j) {
+            tempVect.push_back(m_matrix[i][j] * scalar);
+        }
+        newMatrix.push_back(tempVect);
+    }
+    return newMatrix;
+}
