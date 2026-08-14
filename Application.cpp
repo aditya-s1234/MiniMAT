@@ -60,7 +60,8 @@ void Application::create() {
         int inp{};
         std::cout << "[1] Create matrix \n"
                      "[2] View matrix \n"
-                     "[3] Return \n";
+                     "[3] Clear List \n"
+                     "[4] Return \n";
         std::cin >> inp;
         switch (inp) {
             case 1: {
@@ -90,6 +91,11 @@ void Application::create() {
                 break;
             }
             case 3: {
+                m_matrixStorage = {};
+                std::cout << "Storage has been wiped. \n";
+                break;
+            }
+            case 4: {
                 return;
             }
             default:
@@ -98,7 +104,6 @@ void Application::create() {
         }
     }
 }
-
 void Application::add() {
     while (true) {
         int inp{};
@@ -110,7 +115,7 @@ void Application::add() {
             case 1:
             case 2: {
                 if (std::ssize(m_matrixStorage)<=1) {
-                    std::cout << "You must have at least 2 matrices in storage to add. \n";
+                    std::cout << "You must have at least 2 matrices in storage to add/subtract. \n";
                     break;
                 }
                 else {
@@ -157,6 +162,122 @@ void Application::add() {
         };
     }
 }
-void Application:: mult() {};
-void Application::scalar() {};
-void Application::transpose() {};
+void Application:: mult() {
+    while (true) {
+        int inp{};
+        std::cout << "[1] Multiply matrices \n"
+                     "[2] Return \n";
+        std::cin >> inp;
+        switch (inp) {
+            case 1:
+                {
+                if (std::ssize(m_matrixStorage)<=1) {
+                    std::cout << "You must have at least 2 matrices in storage to multiply. \n";
+                    break;
+                }
+                else {
+                    int ind1{};
+                    int ind2{};
+                    std::cout << "Input index of first matrix. \n";
+                    std::cin >> ind1;
+                    std::cout << "Input index of second matrix. \n";
+                    std::cin >> ind2;
+                    if (ind1 < 0 || ind1 >= std::ssize(m_matrixStorage) || ind2 < 0 || ind2 >= std::ssize(m_matrixStorage)) {
+                        std::cout << "Invalid index entered.\n";
+                        break;
+                    }
+                    try {
+                        Matrix product = m_matrixStorage[ind1].multiplyMatrix(m_matrixStorage[ind2]);
+                        m_matrixStorage.push_back(product);
+                        product.printMatrix();
+                        std::cout << "Added to index " << std::ssize(m_matrixStorage) - 1 << '\n';
+                    } catch (const std::invalid_argument& e) {
+                        std::cout << "Error: " << e.what() << '\n';
+                    }
+                }
+
+            }
+            case 2:
+                return;
+            default:
+                std::cout << "Invalid input.\n";
+                break;
+
+
+        };
+    }
+};
+void Application::scalar() {
+    while (true) {
+        int inp{};
+        std::cout << "[1] Multiply matrix by scalar \n"
+                     "[2] Return \n";
+        std::cin >> inp;
+        switch (inp) {
+            case 1:
+            {
+                if (std::ssize(m_matrixStorage)<1) {
+                    std::cout << "You must have at least 1 matrix in storage to multiply it by a scalar. \n";
+                    break;
+                }
+                int ind1{};
+                std::cout << "Input index of the matrix. \n";
+                std::cin >> ind1;
+
+                if (ind1 < 0 || ind1 >= std::ssize(m_matrixStorage)) {
+                    std::cout << "Invalid index entered.\n";
+                    break;
+                }
+                double scalar{};
+                std::cout << "Enter scalar: \n";
+                std::cin >> scalar;
+                Matrix scaled {m_matrixStorage[ind1].multiplyScalar(scalar)};
+                scaled.printMatrix();
+                m_matrixStorage.push_back(scaled);
+                std::cout << "Added to index " << std::ssize(m_matrixStorage) - 1 << '\n';
+            }
+            case 2:
+                return;
+            default:
+                std::cout << "Invalid input.\n";
+                break;
+        };
+    }
+};
+void Application::transpose() {
+    while (true) {
+        int inp{};
+        std::cout << "[1] Transpose matrix \n"
+                     "[2] Return \n";
+        std::cin >> inp;
+        switch (inp) {
+            case 1:
+            {
+                if (std::ssize(m_matrixStorage)<1) {
+                    std::cout << "You must have at least 1 matrix in storage to transpose it. \n";
+                    break;
+                }
+                int ind1{};
+                std::cout << "Input index of the matrix. \n";
+                std::cin >> ind1;
+
+                if (ind1 < 0 || ind1 >= std::ssize(m_matrixStorage)) {
+                    std::cout << "Invalid index entered.\n";
+                    break;
+                }
+                Matrix transpose {m_matrixStorage[ind1].transposeMatrix()};
+                transpose.printMatrix();
+                m_matrixStorage.push_back(transpose);
+                std::cout << "Added to index " << std::ssize(m_matrixStorage) - 1 << '\n';
+
+            }
+            case 2:
+                return;
+            default:
+                std::cout << "Invalid input.\n";
+                break;
+
+
+        };
+    }
+};
