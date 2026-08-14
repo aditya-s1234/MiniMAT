@@ -56,7 +56,6 @@ public:
     void setMatrix(int numRows, int numCols) {
         for (int i{}; i < numRows; ++i) {
             std::cout << "Enter row " << i << ": ";
-
             //get the entire line, feeds into stringstream to convert inputs into doubles and pushes into row
             //REMEMBER******** need to change this into a kind of resizing function instead of only being called for constructor.******
             std::string line;
