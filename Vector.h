@@ -11,9 +11,13 @@ private:
     std::vector<double> m_vector{};
 
 
-
+public:
     Vector() {
         setVector(0);
+    }
+
+    Vector (int row) {
+        setVector(row);
     }
 
     void setVector(int row) {

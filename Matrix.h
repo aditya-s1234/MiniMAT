@@ -10,6 +10,7 @@
 #include <initializer_list>
 #include "Vector.h"
 
+class Vector;
 class Matrix {
 private:
     //matrices organized within m_matrix vector
@@ -81,5 +82,5 @@ public:
     Matrix multiplyScalar(double scalar) const;
     void swapRows(int row1, int row2, Vector& vect);
     void reduceRow(int row1, int row2, Vector& vect, int pos);
-    Matrix gaussianElimination(Vector& vect);
+    Matrix gaussianElimination(Vector& vect) const;
 };

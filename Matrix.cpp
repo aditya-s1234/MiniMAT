@@ -11,6 +11,10 @@
 void Matrix::printMatrix() const{
     for (const auto& i : m_matrix) {
         for (const auto& j : i) {
+            if (std::abs(j) < 1e-9) {
+                std::cout << 0 << " ";
+                continue;
+            }
             std::cout << j << " ";
         }
         std::cout << "\n";
@@ -95,6 +99,7 @@ Matrix Matrix::multiplyScalar(double scalar) const {
 
 //for below functions, might be better to create separate vector functions and call both
 //instead of giving Matrix access to private Vector members
+
 void Matrix::swapRows(int row1, int row2, Vector& vect) {
     std::swap(m_matrix[row1], m_matrix[row2]);
     //my own augument implementation here
@@ -108,5 +113,34 @@ void Matrix::reduceRow(int row1, int row2, Vector& vect, int pos) {
     //augment implementation
     vect.m_vector[row2] -= vect.m_vector[row1]*multiple;
 }
+Matrix Matrix::gaussianElimination(Vector& vect) const{
+    std::cout << "In elim." << std::endl;
 
+    Matrix newMatrix {m_matrix};
+    //row swapping
+    for (std::ptrdiff_t i{}; i < std::ssize(newMatrix.m_matrix); ++i) {
+
+        double maxPivot{};
+        int pivotIndex{};
+        for (std::ptrdiff_t j{i}; j < std::ssize(newMatrix.m_matrix); ++j) {
+            if (std::abs(newMatrix.m_matrix[j][i]) > std::abs(maxPivot)) {
+                maxPivot = newMatrix.m_matrix[j][i];
+                pivotIndex = j;
+            }
+        }
+        newMatrix.swapRows(i,pivotIndex, vect);
+
+        //row reduction
+        for (std::ptrdiff_t k{i+1}; k < std::ssize(newMatrix.m_matrix); ++k) {
+            if (newMatrix.m_matrix[k][i] == 0) {
+                continue;
+            }
+            newMatrix.reduceRow(i, k, vect, i);
+        }
+    }
+
+
+
+    return newMatrix;
+}
 
