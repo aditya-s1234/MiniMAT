@@ -7,4 +7,6 @@ add_executable(MiniMAT main.cpp
         Matrix.cpp
         Matrix.h
         Application.cpp
-        Application.h)
+        Application.h
+        Vector.cpp
+        Vector.h)

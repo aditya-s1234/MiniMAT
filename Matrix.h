@@ -8,7 +8,7 @@
 #include <string>
 #include <sstream>
 #include <initializer_list>
-
+#include "Vector.h"
 
 class Matrix {
 private:
@@ -79,4 +79,7 @@ public:
     Matrix multiplyMatrix(const Matrix& matrix2) const;
     Matrix transposeMatrix() const;
     Matrix multiplyScalar(double scalar) const;
+    void swapRows(int row1, int row2, Vector& vect);
+    void reduceRow(int row1, int row2, Vector& vect, int pos);
+    Matrix gaussianElimination(Vector& vect);
 };

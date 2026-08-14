@@ -3,7 +3,7 @@
 //
 
 #include "Matrix.h"
-
+#include "Vector.h"
 // matrix printing and arithmetic operations here
 
 //SELF NOTE: REMEMBER TO ADD ERROR CHECKING TO EVERYTHING
@@ -17,7 +17,7 @@ void Matrix::printMatrix() const{
     }
 }
 
- Matrix Matrix::addMatrix(const Matrix& matrix2) const{
+Matrix Matrix::addMatrix(const Matrix& matrix2) const{
     std::vector<std::vector<double>> matrixSum {};
     if (m_matrix.size() != matrix2.m_matrix.size() || m_matrix[0].size() != matrix2.m_matrix[0].size()) {
         throw std::invalid_argument("Matrix dimensions must match for addition. \n");
@@ -32,7 +32,7 @@ void Matrix::printMatrix() const{
     return Matrix{matrixSum};
 }
 
- Matrix Matrix::subtractMatrix(const Matrix& matrix2) const{
+Matrix Matrix::subtractMatrix(const Matrix& matrix2) const{
     std::vector<std::vector<double>> matrixSum {};
     if (m_matrix.size() != matrix2.m_matrix.size() || m_matrix[0].size() != matrix2.m_matrix[0].size()) {
         throw std::invalid_argument("Matrix dimensions must match for subtraction. \n");
@@ -49,7 +49,7 @@ void Matrix::printMatrix() const{
     return Matrix{matrixSum};
 }
 
- Matrix Matrix::multiplyMatrix(const Matrix& matrix2) const {
+Matrix Matrix::multiplyMatrix(const Matrix& matrix2) const {
     std::vector<std::vector<double>> newMatrix{};
     if (m_matrix[0].size() != matrix2.m_matrix.size()) {
         throw std::invalid_argument("Cols in first matrix must match rows in second for multiplication. \n");
@@ -91,3 +91,22 @@ Matrix Matrix::multiplyScalar(double scalar) const {
     }
     return newMatrix;
 }
+
+
+//for below functions, might be better to create separate vector functions and call both
+//instead of giving Matrix access to private Vector members
+void Matrix::swapRows(int row1, int row2, Vector& vect) {
+    std::swap(m_matrix[row1], m_matrix[row2]);
+    //my own augument implementation here
+    std::swap(vect.m_vector[row1], vect.m_vector[row2]);
+}
+void Matrix::reduceRow(int row1, int row2, Vector& vect, int pos) {
+    double multiple{m_matrix[row2][pos] / m_matrix[row1][pos]};
+    for (std::ptrdiff_t i{}; i < std::ssize(m_matrix[row2]); ++i) {
+        m_matrix[row2][i] -= m_matrix[row1][i]*multiple;
+    }
+    //augment implementation
+    vect.m_vector[row2] -= vect.m_vector[row1]*multiple;
+}
+
+
