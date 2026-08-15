@@ -20,6 +20,11 @@ public:
         setVector(row);
     }
 
+    Vector (std::vector<double> list)
+        :m_vector(list)
+    {
+    }
+
     void setVector(int row) {
         for (std::ptrdiff_t i{}; i < row; ++i) {
             double temp{};

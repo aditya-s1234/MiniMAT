@@ -83,4 +83,5 @@ public:
     void swapRows(int row1, int row2, Vector& vect);
     void reduceRow(int row1, int row2, Vector& vect, int pos);
     Matrix gaussianElimination(Vector& vect) const;
+    Vector solveMatrix(Vector& vect) const;
 };

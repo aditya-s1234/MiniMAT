@@ -121,7 +121,7 @@ Matrix Matrix::gaussianElimination(Vector& vect) const{
     for (std::ptrdiff_t i{}; i < std::ssize(newMatrix.m_matrix); ++i) {
 
         double maxPivot{};
-        int pivotIndex{};
+        int pivotIndex{static_cast<int>(i)};
         for (std::ptrdiff_t j{i}; j < std::ssize(newMatrix.m_matrix); ++j) {
             if (std::abs(newMatrix.m_matrix[j][i]) > std::abs(maxPivot)) {
                 maxPivot = newMatrix.m_matrix[j][i];
@@ -143,4 +143,43 @@ Matrix Matrix::gaussianElimination(Vector& vect) const{
 
     return newMatrix;
 }
+Vector Matrix::solveMatrix(Vector& vect) const{
+    //i am checking for zero row here by adding entire final row
+    double checkSum{};
+    for (std::ptrdiff_t i{}; i < std::ssize(m_matrix[0]); ++i) {
+        checkSum+=std::abs(m_matrix[std::ssize(m_matrix)-1][i]);
+    }
+    if (checkSum <= 1e-9) {
+        if (vect.m_vector[std::ssize(vect.m_vector)-1] == 0) {
+            throw std::invalid_argument("Infinite solutions. \n");
+        }
+        else {
+            throw std::invalid_argument("No solutions. \n");
+        }
+    }
+    //back substitution process
+
+    //here, creating the starting solution vector initialized with all zeros
+    Vector answer {vect.m_vector};
+    Vector solutions {std::vector<double>{}};
+    solutions.m_vector.resize(std::ssize(m_matrix));
+
+
+    for (std::ptrdiff_t i{std::ssize(m_matrix)-1}; i >=0; --i) {
+        for (std::ptrdiff_t j{}; j < std::ssize(m_matrix[0]); ++j) {
+            if (i == j) {
+                continue;
+            }
+            answer.m_vector[i]-= m_matrix[i][j]*solutions.m_vector[j];
+        }
+        //divide answer by divisor of selected digit, then append that to solution vector
+        solutions.m_vector[i] = answer.m_vector[i]/m_matrix[i][i];
+
+    }
+
+
+    return solutions;
+
+}
+
 
