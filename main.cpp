@@ -6,8 +6,8 @@
 
 int main () {
 
-    // Application app;
-    // app.run();
+    Application app;
+    app.run();
 
 
 

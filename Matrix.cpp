@@ -1,6 +1,4 @@
-//
-// Created by Aditya Subramanian on 8/12/26.
-//
+
 
 #include "Matrix.h"
 #include "Vector.h"
@@ -114,7 +112,13 @@ void Matrix::reduceRow(int row1, int row2, Vector& vect, int pos) {
     vect.m_vector[row2] -= vect.m_vector[row1]*multiple;
 }
 Matrix Matrix::gaussianElimination(Vector& vect) const{
-    std::cout << "In elim." << std::endl;
+    if (vect.m_vector.empty()) {
+        vect.m_vector.resize(std::ssize(m_matrix));
+    }
+
+    if (std::ssize(m_matrix) != std::ssize(vect.m_vector)) {
+        throw std::invalid_argument ("# of rows and # of solutions do not match. \n");
+    }
 
     Matrix newMatrix {m_matrix};
     //row swapping
@@ -125,17 +129,17 @@ Matrix Matrix::gaussianElimination(Vector& vect) const{
         for (std::ptrdiff_t j{i}; j < std::ssize(newMatrix.m_matrix); ++j) {
             if (std::abs(newMatrix.m_matrix[j][i]) > std::abs(maxPivot)) {
                 maxPivot = newMatrix.m_matrix[j][i];
-                pivotIndex = j;
+                pivotIndex = static_cast<int>(j);
             }
         }
-        newMatrix.swapRows(i,pivotIndex, vect);
+        newMatrix.swapRows(static_cast<int>(i),pivotIndex, vect);
 
         //row reduction
         for (std::ptrdiff_t k{i+1}; k < std::ssize(newMatrix.m_matrix); ++k) {
             if (newMatrix.m_matrix[k][i] == 0) {
                 continue;
             }
-            newMatrix.reduceRow(i, k, vect, i);
+            newMatrix.reduceRow(static_cast<int>(i), static_cast<int>(k), vect, static_cast<int>(i));
         }
     }
 
@@ -145,18 +149,21 @@ Matrix Matrix::gaussianElimination(Vector& vect) const{
 }
 Vector Matrix::solveMatrix(Vector& vect) const{
     //i am checking for zero row here by adding entire final row
-    double checkSum{};
-    for (std::ptrdiff_t i{}; i < std::ssize(m_matrix[0]); ++i) {
-        checkSum+=std::abs(m_matrix[std::ssize(m_matrix)-1][i]);
-    }
-    if (checkSum <= 1e-9) {
-        if (vect.m_vector[std::ssize(vect.m_vector)-1] == 0) {
-            throw std::invalid_argument("Infinite solutions. \n");
+    for (std::ptrdiff_t i{}; i < std::ssize(m_matrix); ++i) {
+        double checkSum{};
+        for (std::ptrdiff_t j{}; j < std::ssize(m_matrix[0]); ++j) {
+            checkSum+=std::abs(m_matrix[i][j]);
         }
-        else {
-            throw std::invalid_argument("No solutions. \n");
+        if (checkSum <= 1e-9) {
+            if (std::abs(vect.m_vector[i]) <= 1e-9) {
+                throw std::invalid_argument("Infinite solutions. \n");
+            }
+            else {
+                throw std::invalid_argument("No solutions. \n");
+            }
         }
     }
+
     //back substitution process
 
     //here, creating the starting solution vector initialized with all zeros
