@@ -102,6 +102,8 @@ void Matrix::swapRows(int row1, int row2, Vector& vect) {
     std::swap(m_matrix[row1], m_matrix[row2]);
     //my own augument implementation here
     std::swap(vect.m_vector[row1], vect.m_vector[row2]);
+    std::cout << "swap";
+    m_determinantConstant*=-1;
 }
 void Matrix::reduceRow(int row1, int row2, Vector& vect, int pos) {
     double multiple{m_matrix[row2][pos] / m_matrix[row1][pos]};
@@ -119,7 +121,6 @@ Matrix Matrix::gaussianElimination(Vector& vect) const{
     if (std::ssize(m_matrix) != std::ssize(vect.m_vector)) {
         throw std::invalid_argument ("# of rows and # of solutions do not match. \n");
     }
-
     Matrix newMatrix {m_matrix};
     //row swapping
     for (std::ptrdiff_t i{}; i < std::ssize(newMatrix.m_matrix); ++i) {
@@ -132,7 +133,10 @@ Matrix Matrix::gaussianElimination(Vector& vect) const{
                 pivotIndex = static_cast<int>(j);
             }
         }
-        newMatrix.swapRows(static_cast<int>(i),pivotIndex, vect);
+        if (static_cast<int>(i) != pivotIndex) {
+            newMatrix.swapRows(static_cast<int>(i),pivotIndex, vect);
+        }
+
 
         //row reduction
         for (std::ptrdiff_t k{i+1}; k < std::ssize(newMatrix.m_matrix); ++k) {
@@ -181,12 +185,17 @@ Vector Matrix::solveMatrix(Vector& vect) const{
         }
         //divide answer by divisor of selected digit, then append that to solution vector
         solutions.m_vector[i] = answer.m_vector[i]/m_matrix[i][i];
-
     }
-
-
     return solutions;
 
+}
+double Matrix::findDeterminant() const {
+    if (std::ssize(m_matrix) != std::ssize(m_matrix[0]))
+        throw std::invalid_argument ("Matrix is not a square matrix. \n");
+    double determinant {1};
+    for (std::ptrdiff_t i{}; i < std::ssize(m_matrix);++i)
+        determinant*=m_matrix[i][i];
+    return determinant*m_determinantConstant;
 }
 
 

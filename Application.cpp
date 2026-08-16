@@ -16,7 +16,8 @@ void Application::run() {
                      "[6] Transpose matrix \n"
                      "------Advanced linear algebra functions------ \n"
                      "[7] Gaussian elimination \n"
-                     "[8] Solve Ax = b\n";
+                     "[8] Solve Ax = b\n"
+                     "[9] Find determinant of matrix \n ";
         std::cin >> m_input;
 
         if (m_input == -1) {
@@ -62,6 +63,9 @@ void Application::matrixOperations() {
         case 8: {
             Application::solve();
             break;
+        }
+        case 9: {
+            Application::determinant();
         }
 
         default:
@@ -414,6 +418,44 @@ void Application::solve() {
                     std::cout << "Error: " << e.what() << '\n';
                 }
 
+            }
+            case 2:
+                return;
+            default:
+                std::cout << "Invalid input. \n";
+                break;
+        }
+    }
+}
+void Application::determinant() {
+    while (true) {
+        int inp {};
+        std::cout << "[1] Solve determinant of matrix \n"
+                     "[2] Return \n";
+        std::cin >> inp;
+        switch (inp) {
+            case 1: {
+                if (std::ssize(m_matrixStorage)<1) {
+                    std::cout << "You must have at least 1 matrix in storage to find it's determinant. \n";
+                    break;
+                }
+                int indexm{};
+                std::cout << "Input index of the matrix: ";
+                std::cin >> indexm;
+                if (indexm<0 || indexm >= std::ssize(m_matrixStorage)) {
+                    std::cout << "Invalid matrixindex entered. \n";
+                    break;
+                }
+                try {
+                    Vector blank{};
+                    Matrix upper {m_matrixStorage[indexm].gaussianElimination(blank)};
+                    upper.printMatrix();
+                    std::cout << "The determinant of this matrix is " << upper.findDeterminant() << '\n';
+                }
+                catch (const std::invalid_argument& e) {
+                    std::cout << "Error: " << e.what() << '\n';
+                }
+                break;
             }
             case 2:
                 return;

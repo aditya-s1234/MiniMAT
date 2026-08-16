@@ -26,7 +26,7 @@ public:
     void transpose();
     void gaussian();
     void solve();
-
+    void determinant();
 
 
 };

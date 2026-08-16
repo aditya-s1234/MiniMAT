@@ -13,15 +13,12 @@ private:
     //matrices organized within m_matrix vector
 
     std::vector<std::vector<double>> m_matrix {};
+    int m_determinantConstant {1};
 
 public:
-
-
-
     Matrix ()
         :Matrix(0, 0)
     {
-
     }
     //construct with rows and cols (i have to remove this)
     Matrix (int rows, int cols) {
@@ -81,4 +78,5 @@ public:
     void reduceRow(int row1, int row2, Vector& vect, int pos);
     Matrix gaussianElimination(Vector& vect) const;
     Vector solveMatrix(Vector& vect) const;
+    double findDeterminant() const;
 };
