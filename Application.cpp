@@ -17,7 +17,9 @@ void Application::run() {
                      "------Advanced linear algebra functions------ \n"
                      "[7] Gaussian elimination \n"
                      "[8] Solve Ax = b\n"
-                     "[9] Find determinant of matrix \n ";
+                     "[9] Find determinant of matrix \n"
+                     "[10] Find row reduced echelon form of matrix \n"
+                     "[11] Find inverse of function \n";
         std::cin >> m_input;
 
         if (m_input == -1) {
@@ -66,6 +68,15 @@ void Application::matrixOperations() {
         }
         case 9: {
             Application::determinant();
+            break;
+        }
+        case 10: {
+            Application::rref();
+            break;
+        }
+        case 11: {
+            Application::inverse();
+            break;
         }
 
         default:
@@ -456,6 +467,76 @@ void Application::determinant() {
                     std::cout << "Error: " << e.what() << '\n';
                 }
                 break;
+            }
+            case 2:
+                return;
+            default:
+                std::cout << "Invalid input. \n";
+                break;
+        }
+    }
+}
+void Application::rref() {
+    while (true) {
+        int inp {};
+        std::cout << "[1] Solve for row reduced echelon form of matrix \n"
+                     "[2] Return \n";
+        std::cin >> inp;
+        switch (inp) {
+            case 1: {
+                if (std::ssize(m_matrixStorage)<1) {
+                    std::cout << "You must have at least 1 matrix in storage to find it's RREF. \n";
+                    break;
+                }
+                int indexm{};
+                std::cout << "Input index of the matrix: ";
+                std::cin >> indexm;
+                if (indexm<0 || indexm >= std::ssize(m_matrixStorage)) {
+                    std::cout << "Invalid matrix index entered. \n";
+                    break;
+                }
+                Vector blank{};
+                Matrix reduce {m_matrixStorage[indexm].rref(blank)};
+                reduce.printMatrix();
+                m_matrixStorage.push_back(reduce);
+                std::cout << "Matrix added to index " << std::ssize(m_matrixStorage)-1;
+            }
+            case 2:
+                return;
+            default:
+                std::cout << "Invalid input. \n";
+                break;
+        }
+    }
+}
+void Application::inverse() {
+    while (true) {
+        int inp {};
+        std::cout << "[1] Solve for inverse of matrix \n"
+                     "[2] Return \n";
+        std::cin >> inp;
+        switch (inp) {
+            case 1: {
+                if (std::ssize(m_matrixStorage)<1) {
+                    std::cout << "You must have at least 1 matrix in storage to find it's RREF. \n";
+                    break;
+                }
+                int indexm{};
+                std::cout << "Input index of the matrix: ";
+                std::cin >> indexm;
+                if (indexm<0 || indexm >= std::ssize(m_matrixStorage)) {
+                    std::cout << "Invalid matrix index entered. \n";
+                    break;
+                }
+                try {
+                   Matrix inverse {m_matrixStorage[indexm].inverseMatrix()};
+                    inverse.printMatrix();
+                    m_matrixStorage.push_back(inverse);
+                    std::cout << "Matrix added to index " << std::ssize(m_matrixStorage)-1;
+                }
+                catch (const std::invalid_argument& e) {
+                    std::cout << "Error: " << e.what() << '\n';
+                }
             }
             case 2:
                 return;

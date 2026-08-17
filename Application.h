@@ -27,6 +27,7 @@ public:
     void gaussian();
     void solve();
     void determinant();
-
+    void rref();
+    void inverse();
 
 };
