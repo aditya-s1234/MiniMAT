@@ -102,7 +102,6 @@ void Matrix::swapRows(int row1, int row2, Vector& vect) {
     std::swap(m_matrix[row1], m_matrix[row2]);
     //my own augument implementation here
     std::swap(vect.m_vector[row1], vect.m_vector[row2]);
-    std::cout << "swap";
     m_determinantConstant*=-1;
 }
 void Matrix::reduceRow(int row1, int row2, Vector& vect, int pos) {
@@ -198,4 +197,159 @@ double Matrix::findDeterminant() const {
     return determinant*m_determinantConstant;
 }
 
+Matrix Matrix::gaussianElimination(Matrix& mat) const{
+
+    if (std::ssize(m_matrix) != std::ssize(mat.m_matrix)) {
+        throw std::invalid_argument ("# of rows and # of solutions do not match. \n");
+    }
+    Matrix newMatrix {m_matrix};
+    //row swapping
+    for (std::ptrdiff_t i{}; i < std::ssize(newMatrix.m_matrix); ++i) {
+
+        double maxPivot{};
+        int pivotIndex{static_cast<int>(i)};
+        for (std::ptrdiff_t j{i}; j < std::ssize(newMatrix.m_matrix); ++j) {
+            if (std::abs(newMatrix.m_matrix[j][i]) > std::abs(maxPivot)) {
+                maxPivot = newMatrix.m_matrix[j][i];
+                pivotIndex = static_cast<int>(j);
+            }
+        }
+        if (static_cast<int>(i) != pivotIndex) {
+            newMatrix.swapRows(static_cast<int>(i),pivotIndex, mat);
+        }
+
+
+        //row reduction
+        for (std::ptrdiff_t k{i+1}; k < std::ssize(newMatrix.m_matrix); ++k) {
+            if (newMatrix.m_matrix[k][i] == 0) {
+                continue;
+            }
+            newMatrix.reduceRow(static_cast<int>(i), static_cast<int>(k), mat, static_cast<int>(i));
+        }
+    }
+
+
+
+    return newMatrix;
+}
+
+//overloading swap and reduce functions so i can input identity matrix and use to calculate inverse
+void Matrix::swapRows(int row1, int row2, Matrix& mat) {
+    std::swap(m_matrix[row1], m_matrix[row2]);
+    //my own augument implementation here
+    std::swap(mat.m_matrix[row1], mat.m_matrix[row2]);
+    m_determinantConstant*=-1;
+}
+void Matrix::reduceRow(int row1, int row2, Matrix& mat, int pos) {
+    double multiple{m_matrix[row2][pos] / m_matrix[row1][pos]};
+    for (std::ptrdiff_t i{}; i < std::ssize(m_matrix[row2]); ++i) {
+        m_matrix[row2][i] -= m_matrix[row1][i]*multiple;
+    }
+    //augment implementation
+    for (std::ptrdiff_t j{}; j < std::ssize(mat.m_matrix[row2]); ++j) {
+        mat.m_matrix[row2][j] -= mat.m_matrix[row1][j]*multiple;
+    }
+}
+
+
+
+Matrix Matrix::rref(Vector& vect) {
+
+
+    Matrix reduced {gaussianElimination(vect)};
+
+    //this part creates 0 above the pivot
+    for (std::ptrdiff_t i{std::ssize(reduced.m_matrix)-1}; i > 0; -- i) {
+        for (std::ptrdiff_t j{}; j < std::ssize(reduced.m_matrix[0]); ++j) {
+            if (std::abs(reduced.m_matrix[i][j]) <= 1e-9)
+                continue;
+            for (std::ptrdiff_t k{i-1}; k >=0; --k) {
+                reduced.reduceRow(static_cast<int>(i), static_cast<int>(k), vect, static_cast<int>(j));
+            }
+            break;
+        }
+    }
+
+    //this part divides each row so that pivots become 1
+
+    for (std::ptrdiff_t i{}; i < std::ssize(reduced.m_matrix); ++i) {
+        for (std::ptrdiff_t j{}; j < std::ssize(reduced.m_matrix[0]); ++j) {
+            if (std::abs(reduced.m_matrix[i][j]) <= 1e-9) {
+                continue;
+            }
+            if (std::abs(reduced.m_matrix[i][j] - 1.0) > 1e-9) {
+                double pivot {reduced.m_matrix[i][j]};
+                vect.m_vector[i] /= pivot;
+                for (std::ptrdiff_t k{}; k < std::ssize(reduced.m_matrix[i]); ++k) {
+                    reduced.m_matrix[i][k] /= pivot;
+                }
+            }
+            break;
+        }
+    }
+    return reduced;
+}
+
+
+Matrix Matrix::rref(Matrix& mat) {
+
+
+    Matrix reduced {gaussianElimination(mat)};
+
+    //this part creates 0 above the pivot
+    for (std::ptrdiff_t i{std::ssize(reduced.m_matrix)-1}; i > 0; -- i) {
+        for (std::ptrdiff_t j{}; j < std::ssize(reduced.m_matrix[0]); ++j) {
+            if (std::abs(reduced.m_matrix[i][j]) <= 1e-9)
+                continue;
+            for (std::ptrdiff_t k{i-1}; k >=0; --k) {
+                reduced.reduceRow(static_cast<int>(i), static_cast<int>(k), mat, static_cast<int>(j));
+            }
+            break;
+        }
+    }
+
+    //this part divides each row so that pivots become 1
+
+    for (std::ptrdiff_t i{}; i < std::ssize(reduced.m_matrix); ++i) {
+        for (std::ptrdiff_t j{}; j < std::ssize(reduced.m_matrix[0]); ++j) {
+            if (std::abs(reduced.m_matrix[i][j]) <= 1e-9) {
+                continue;
+            }
+            if (std::abs(reduced.m_matrix[i][j] - 1.0) > 1e-9) {
+                double pivot {reduced.m_matrix[i][j]};
+                for (std::ptrdiff_t k{}; k < std::ssize(reduced.m_matrix[i]); ++k) {
+                    mat.m_matrix[i][k] /= pivot;
+                    reduced.m_matrix[i][k] /= pivot;
+                }
+            }
+            break;
+        }
+    }
+    return reduced;
+}
+
+
+ Matrix Matrix::inverseMatrix() const {
+     if (std::abs(findDeterminant()) <= 1e-9) {
+         throw std::invalid_argument ("Matrix is not invertible. \n");
+     }
+     Matrix inverseToId{m_matrix};
+
+    //creating identity matrix and reducing matrix to upper triangular form THIS SHOULD BE IN INVERSE NOT HERE
+    Matrix identityToInv {};
+    for (std::ptrdiff_t i{}; i < std::ssize(m_matrix); ++i) {
+        std::vector<double> tempVect{};
+        for (std::ptrdiff_t j{}; j < std::ssize(m_matrix[0]); ++j) {
+            if (i == j) {
+                tempVect.push_back(1);
+                continue;
+            }
+            tempVect.push_back(0);
+        }
+        identityToInv.m_matrix.push_back(tempVect);
+    }
+    inverseToId.rref(identityToInv);
+    return identityToInv;
+
+ }
 

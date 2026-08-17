@@ -79,4 +79,11 @@ public:
     Matrix gaussianElimination(Vector& vect) const;
     Vector solveMatrix(Vector& vect) const;
     double findDeterminant() const;
+    //overloads im using for rref
+    void swapRows(int row1, int row2, Matrix& mat);
+    void reduceRow(int row1, int row2, Matrix& mat, int pos);
+    Matrix gaussianElimination(Matrix& mat) const;
+    Matrix rref(Vector& vect);
+    Matrix rref(Matrix& mat);
+    Matrix inverseMatrix() const;
 };
