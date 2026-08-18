@@ -2,33 +2,36 @@
 #include "Matrix.h"
 #include "Application.h"
 #include "Lexer.h"
-
+#include "Parser.h"
 int main () {
 
+    Parser parse{};
     // Application App;
     // App.run();
-
-    std::string inp;
-    std::getline(std::cin, inp);
-    Lexer x{inp};
-    x.lexingLoop();
-    std::vector<Token> y {x.translateToTokens()};
-    for (const auto& token : y) {
-        std::string typeName;
-        switch (token.type) {
-            case TokenType::IDENTIFIER:    typeName = "IDENTIFIER"; break;
-            case TokenType::NUMBER:        typeName = "NUMBER"; break;
-            case TokenType::LEFT_BRACKET:  typeName = "LEFT_BRACKET"; break;
-            case TokenType::RIGHT_BRACKET: typeName = "RIGHT_BRACKET"; break;
-            case TokenType::PLUS:          typeName = "PLUS"; break;
-            case TokenType::MINUS:         typeName = "MINUS"; break;
-            case TokenType::STAR:          typeName = "STAR"; break;
-            case TokenType::EQUALS:        typeName = "EQUALS"; break;
-            case TokenType::SEMICOLON:     typeName = "SEMICOLON"; break;
-            case TokenType::END:           typeName = "END"; break;
+    while (true) {
+        std::cout << "MiniMAT>> ";
+        std::string line;
+        std::getline(std::cin, line);
+        if (!std::cin) {
+            break;
         }
-        std::cout << typeName << " ('" << token.content << "')\n";
+        if (line == "quit" || line == "q")
+            break;
+        Lexer x {line};
+        x.lexingLoop();
+        parse.setTokens(x.translateToTokens());
+        try {
+            parse.parseExpression();
+        }
+        catch (const std::exception& e) {
+            std::cout << e.what() << "\n";
+        }
+
+
+
     }
+
+
 
 
     return 0;

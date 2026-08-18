@@ -4,7 +4,6 @@
 #include "Vector.h"
 // matrix printing and arithmetic operations here
 
-//SELF NOTE: REMEMBER TO ADD ERROR CHECKING TO EVERYTHING
 
 void Matrix::printMatrix() const{
     for (const auto& i : m_matrix) {

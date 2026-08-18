@@ -67,6 +67,26 @@ public:
     }
 
 
+    Matrix operator+= (const Matrix& rhs) const{
+        return addMatrix(rhs);
+    }
+    Matrix operator+ (const Matrix& rhs) const {
+        return *this+=rhs;
+    }
+
+    Matrix operator-= (const Matrix& rhs) const{
+        return subtractMatrix(rhs);
+    }
+    Matrix operator- (const Matrix& rhs) const {
+        return *this-=rhs;
+    }
+
+    Matrix operator*= (const Matrix& rhs) const {
+        return multiplyMatrix(rhs);
+    }
+    Matrix operator* (const Matrix& rhs) const {
+        return *this*=rhs;
+    }
     //member funcs
     void printMatrix() const;
     Matrix addMatrix(const Matrix&) const;

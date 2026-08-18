@@ -55,8 +55,9 @@ private:
 
 public:
 
-    Lexer(std::string_view str) {
-        source = str;
+    Lexer(std::string_view str)
+        :source {str}
+    {
     }
 
     std::vector<Token> translateToTokens();
