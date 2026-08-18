@@ -3,12 +3,6 @@
 #include "Application.h"
 #include "Lexer.h"
 
-
-
-
-
-
-
 int main () {
 
     // Application App;
