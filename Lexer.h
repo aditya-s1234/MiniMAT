@@ -13,6 +13,8 @@ enum class TokenType {
     STAR,
     EQUALS,
     SEMICOLON,
+    LEFT_PAREN,
+    RIGHT_PAREN,
     END,
 };
 

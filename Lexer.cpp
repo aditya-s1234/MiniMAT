@@ -62,6 +62,12 @@ void Lexer::lexToken() {
             case ';':
                 addToken(TokenType::SEMICOLON);
                 return;
+            case '(':
+                addToken(TokenType::LEFT_PAREN);
+                return;
+            case ')':
+                addToken(TokenType::RIGHT_PAREN);
+                return;
             case ' ':
             case '\n':
             case '\t':

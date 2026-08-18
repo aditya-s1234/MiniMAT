@@ -29,7 +29,6 @@ Matrix Parser::parseMatrix() {
             advance();
         }
 
-        advance();
     }
     //pushes in last row (wont have semicolon here
     if (!row.empty()) {
@@ -55,12 +54,50 @@ Matrix Parser::parsePrimary() {
 
         case (TokenType::IDENTIFIER): {
             Token token = advance();
-            if (!names.contains(token.content)) {
+            if (token.content == "rref" && peek().type == TokenType::LEFT_PAREN) {
+                advance();
+                Matrix param {parseExpression()};
+                if (!check(TokenType::RIGHT_PAREN))
+                    throw std::invalid_argument("Expected ')'");
+                advance();
+                Vector blank{};
+                return param.rref(blank);
+            }
+            else if (token.content == "elim" && peek().type == TokenType::LEFT_PAREN) {
+                advance();
+                Matrix param {parseExpression()};
+                if (!check(TokenType::RIGHT_PAREN))
+                    throw std::invalid_argument("Expected ')'");
+                advance();
+                Vector blank{};
+                return param.gaussianElimination(blank);
+            }
+            else if (token.content == "print" && peek().type == TokenType::LEFT_PAREN) {
+                advance();
+                Matrix param {parseExpression()};
+                if (!check(TokenType::RIGHT_PAREN))
+                    throw std::invalid_argument("Expected ')'");
+                advance();
+                Vector blank{};
+                param.printMatrix();
+                return param;
+            }
+            else if (!names.contains(token.content)) {
                 throw std::invalid_argument(std::format("Variable {} is not in memory. \n", token.content));
             }
             return names[token.content];
         }
         //future goal: add parentheses token and check parentheses.
+
+        case (TokenType::LEFT_PAREN): {
+            advance();
+            Matrix result {parseExpression()};
+            if (check(TokenType::RIGHT_PAREN))
+                advance();
+            else
+                throw std::invalid_argument(" ')' was expected. \n");
+            return result;
+        }
 
         default:
             throw std::invalid_argument("Error.");
