@@ -21,16 +21,17 @@ Matrix Parser::parseMatrix() {
         }
         //resetting it to 0, capacity should stay the same. REMEMBER TO DO THIS
         //INSTEAD OF CREATING NEW VECTS FOR MY OTHER FUNCTIONS
-        if (check(TokenType::SEMICOLON)) {
+        else if (check(TokenType::SEMICOLON)) {
             if (!matrix.empty() && std::ssize(matrix[0])!=std::ssize(row))
                 throw std::invalid_argument ("All rows must be the same length. \n");
             matrix.push_back(row);
             row.clear();
             advance();
         }
-
+        else
+            throw std::invalid_argument("Unexpected token found. \n");
     }
-    //pushes in last row (wont have semicolon here
+    //pushes in last row (wont have semicolon here)
     if (!row.empty()) {
         if (!matrix.empty() && std::ssize(matrix[0])!=std::ssize(row))
             throw std::invalid_argument ("All rows must be the same length. \n");
@@ -54,6 +55,31 @@ Matrix Parser::parsePrimary() {
 
         case (TokenType::IDENTIFIER): {
             Token token = advance();
+            if ((token.content == "inv" && check(TokenType::LEFT_PAREN))) {
+                advance();
+                Matrix m {parseExpression()};
+                if (!check(TokenType::RIGHT_PAREN))
+                    throw std::invalid_argument ("Expected ') \n");
+                advance();
+                return m.inverseMatrix();
+            }
+            if ((token.content == "solve" && check(TokenType::LEFT_PAREN))) {
+                advance();
+                Matrix m {parseExpression()};
+                if (!check(TokenType::COMMA))
+                    throw std::invalid_argument ("Expected ',' \n");
+                advance();
+                Matrix s {parseExpression()};
+                if (!check(TokenType::RIGHT_PAREN))
+                    throw std::invalid_argument ("Expected ') \n");
+                advance();
+                Vector vect {s.getMatrix()[0]};
+                Matrix reduced {m.gaussianElimination(vect)};
+                Vector sol {reduced.solveMatrix(vect)};
+                Matrix out{};
+                out.getMatrix().push_back(sol.getVector());
+                return out;
+            }
             if (token.content == "rref" && peek().type == TokenType::LEFT_PAREN) {
                 advance();
                 Matrix param {parseExpression()};
@@ -137,6 +163,8 @@ Matrix Parser::parseExpression() {
         names[varName] = leftSide;
         return leftSide;
     }
-    return parseTerm();
+    Matrix m {parseTerm()};
+    m.printMatrix();
+    return m;
 }
 

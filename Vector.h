@@ -34,6 +34,10 @@ public:
         }
     }
 
+    std::vector<double>& getVector() {
+        return m_vector;
+    }
+
     void printVector() const;
 
     //this is so that matrix methods can modify vectors as if it was an augmented matrix

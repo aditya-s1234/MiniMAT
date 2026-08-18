@@ -23,7 +23,8 @@ void Application::run() {
         std::cin >> m_input;
 
         if (m_input == -1) {
-            break;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            return;
         }
         matrixOperations();
 

@@ -68,6 +68,9 @@ void Lexer::lexToken() {
             case ')':
                 addToken(TokenType::RIGHT_PAREN);
                 return;
+            case ',':
+                addToken(TokenType::COMMA);
+                return;
             case ' ':
             case '\n':
             case '\t':

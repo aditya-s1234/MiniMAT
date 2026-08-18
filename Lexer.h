@@ -15,6 +15,7 @@ enum class TokenType {
     SEMICOLON,
     LEFT_PAREN,
     RIGHT_PAREN,
+    COMMA,
     END,
 };
 

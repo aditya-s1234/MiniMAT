@@ -66,6 +66,9 @@ public:
         }
     }
 
+    std::vector<std::vector<double>>& getMatrix() {
+        return m_matrix;
+    }
 
     Matrix operator+= (const Matrix& rhs) const{
         return addMatrix(rhs);
