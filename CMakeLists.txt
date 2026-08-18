@@ -9,4 +9,7 @@ add_executable(MiniMAT main.cpp
         Application.cpp
         Application.h
         Vector.cpp
-        Vector.h)
+        Vector.h
+        Lexer.cpp
+        Lexer.h
+)
