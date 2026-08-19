@@ -69,26 +69,32 @@ public:
     std::vector<std::vector<double>>& getMatrix() {
         return m_matrix;
     }
-
-    Matrix operator+= (const Matrix& rhs) const{
-        return addMatrix(rhs);
+    Matrix& operator+= (const Matrix& rhs) {
+        m_matrix = addMatrix(rhs).m_matrix;
+        return *this;
     }
     Matrix operator+ (const Matrix& rhs) const {
-        return *this+=rhs;
+        Matrix result {*this};
+        result += rhs;
+        return result;
     }
-
-    Matrix operator-= (const Matrix& rhs) const{
-        return subtractMatrix(rhs);
+    Matrix& operator-= (const Matrix& rhs) {
+        m_matrix = subtractMatrix(rhs).m_matrix;
+        return *this;
     }
     Matrix operator- (const Matrix& rhs) const {
-        return *this-=rhs;
+        Matrix result {*this};
+        result -= rhs;
+        return result;
     }
-
-    Matrix operator*= (const Matrix& rhs) const {
-        return multiplyMatrix(rhs);
+    Matrix& operator*= (const Matrix& rhs) {
+        m_matrix = multiplyMatrix(rhs).m_matrix;
+        return *this;
     }
     Matrix operator* (const Matrix& rhs) const {
-        return *this*=rhs;
+        Matrix result {*this};
+        result *= rhs;
+        return result;
     }
     //member funcs
     void printMatrix() const;

@@ -164,7 +164,6 @@ Matrix Parser::parseExpression() {
         return leftSide;
     }
     Matrix m {parseTerm()};
-    m.printMatrix();
     return m;
 }
 
